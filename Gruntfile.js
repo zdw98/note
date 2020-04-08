@@ -1,0 +1,73 @@
+module.exports = function(grunt){
+	//初始化配置grunt文件
+	grunt.initConfig({
+		uglify:{
+			options:{
+				separator:';',
+			},
+			build:{
+				src:'build/js/build.js',
+				dest:'build/js/build.min.js'
+			}
+		},
+		concat:{
+			options:{
+				separator:';',
+			},
+			dist:{
+				src:['src/js/*.js'],
+				dest:'build/js/build.js'
+			},
+		},
+		jshint:{
+			options:{
+				jshintrc:".jshintrc"
+			},
+			build:['Gruntfile.js','src/js/*.js']
+		},
+		cssmin:{
+			options:{
+				mergeIntoShorthands:false,
+				roundingPrecision:-1
+			},
+			target:{
+				files:{
+					'build/css/build.min.css':['src/css/*.css']
+				}
+			}
+		},
+		htmlmin:{
+			dist:{
+				options:{
+					removeComments:true,
+					collapseWhitespace:true
+				},
+				files:{
+					'build/index.html':'src/index.html'
+				},
+				dev:{
+					files:{
+						'build/index.html':'src/index.html'
+					}
+				}
+			}
+		},
+		watch:{
+			scripts:{
+				files:['src/js/*.js','src/css/*.css','src/*.html'],
+				tasks:['concat','jshint','uglify','cssmin'],
+				options:{spawn:false}//变量更新 true:全量更新
+			}
+		}
+  });
+	// 加载包含 "uglify" 任务的插件。
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  // 默认被执行的任务列表。
+  grunt.registerTask('default', ['concat','uglify','jshint','cssmin','htmlmin']);
+  grunt.registerTask('myWatch', ['default','watch']);
+};
